@@ -1,11 +1,11 @@
 #include <iostream>
 #include <GL/freeglut.h>
-
+#include "nfgLoader.h"
+#include "tgaLoader.h"
 
 //tweening
 float xpos = 0;
 float deltax = 1;
-
 //mouse
 float xrot = 0.0f;
 float yrot = 0.0f;
@@ -23,21 +23,57 @@ float ztra = 0.0f;
 void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glPushMatrix();
+
 	glLoadIdentity();
 	gluLookAt(0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	glRotatef(xrot, 1.0f, 0.0f, 0.0f);
 	glRotatef(yrot, 0.0f, 1.0f, 0.0f);
 	glScalef(xsca, ysca, zsca);
 	glTranslatef(xtra, ytra, ztra);
+	glTranslatef(0, -1, 0);
+	//glBegin(GL_QUADS);
+	//glVertex2f(-10.0, -10.0);
+	//glVertex2f(-10.0, 10.0);
+	//glVertex2f(10.0, 10.0);
+	//glVertex2f(10.0, -10.0);
+	//glEnd();
 
-	glBegin(GL_QUADS);
-	glVertex2f(-10.0, -10.0);
-	glVertex2f(-10.0, 10.0);
-	glVertex2f(10.0, 10.0);
-	glVertex2f(10.0, -10.0);
-	glEnd();
 
-	glPushMatrix();
+	Tga info = Tga("Woman1.tga");
+	glEnable(GL_TEXTURE_2D);
+
+	GLuint texture = 0;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.GetWidth(), info.GetWidth(),
+		0, GL_BGR_EXT, GL_UNSIGNED_BYTE, info.GetPixels().data());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//vertex
+	float x1 = 0, x2, x3, y1, y2, y3, z1, z2, z3, u1, u2, u3, v1, v2, v3;
+	for (int i = 0; i < 718; i++) {
+
+		//kordinatvertex
+		x1 = KordinatV[index[i].i1].x; x2 = KordinatV[index[i].i2].x; x3 = KordinatV[index[i].i3].x;
+		y1 = KordinatV[index[i].i1].y; y2 = KordinatV[index[i].i2].y; y3 = KordinatV[index[i].i3].y;
+		z1 = KordinatV[index[i].i1].z; z2 = KordinatV[index[i].i2].z; z3 = KordinatV[index[i].i3].z;
+		//koordinattexture
+		u1 = KordinatV[index[i].i1].u; u2 = KordinatV[index[i].i2].u; u3 = KordinatV[index[i].i3].u;
+		v1 = KordinatV[index[i].i1].v; v2 = KordinatV[index[i].i2].v; v3 = KordinatV[index[i].i3].v;
+
+		glBegin(GL_POLYGON);
+		glTexCoord2f(u1, v1); 
+		glVertex3f(x1, y1, z1);
+
+		glTexCoord2f(u2, v2); 
+		glVertex3f(x2, y2, z2);
+
+		glTexCoord2f(u3, v3); 
+		glVertex3f(x3, y3, z3);
+		glEnd();
+	}
+
 	glPopMatrix();
 	glutSwapBuffers();
 
@@ -61,11 +97,11 @@ void myinit(void) {
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, specularlight);
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	glColor3f(1.0, 0.0, 0.0);
+
 	glPointSize(2.0);
 	glShadeModel(GL_SMOOTH);
 	glMatrixMode(GL_MODELVIEW);
-	glOrtho(-1000, 1000, -1000, 1000, -1000, 1000);
+	glOrtho(-5, 5, -5, 5, -5, 5);
 }
 
 void reshape(int w, int h)
@@ -74,11 +110,11 @@ void reshape(int w, int h)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	if (w <= h)
-		glOrtho(-100, 100, -100 * (GLfloat)h / (GLfloat)w,
-			100 * (GLfloat)h / (GLfloat)w, -100.0, 100.0);
+		glOrtho(-2, 2, -2 * (GLfloat)h / (GLfloat)w,
+			2 * (GLfloat)h / (GLfloat)w, -2, 2);
 	else
-		glOrtho(-100 * (GLfloat)w / (GLfloat)h,
-			100 * (GLfloat)w / (GLfloat)h, -100, 100, -100, 100);
+		glOrtho(-2 * (GLfloat)w / (GLfloat)h,
+			2 * (GLfloat)w / (GLfloat)h, -2, 2, -2, 2);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -134,11 +170,11 @@ void myKeyboard(unsigned char key, int x, int y) {
 		break;
 	case 'a':
 	case 'A': //CameraLeft
-		xtra += 4.0;
+		xtra += 0.1;
 		break;
 	case 'd':
 	case 'D': //CameraRight
-		xtra -= 4.0;
+		xtra -= 0.1;
 		break;
 	}
 	Display();
@@ -161,7 +197,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("Bimo Adam - 672018274 | Yosefhin R.Y - 672018412");
 
 	myinit();
-
+	load("Woman1.nfg");
 	glutDisplayFunc(Display);
 	glutTimerFunc(0, timer, 0);
 	glutReshapeFunc(reshape);
