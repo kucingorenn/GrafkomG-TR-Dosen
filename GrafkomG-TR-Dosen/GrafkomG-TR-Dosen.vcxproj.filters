@@ -30,10 +30,10 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="nfgLoader.h">
+    <ClInclude Include="tgaloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="tgaloader.h">
+    <ClInclude Include="nfgLoader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="struct.h">

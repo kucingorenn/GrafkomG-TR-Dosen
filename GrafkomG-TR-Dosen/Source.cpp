@@ -1,6 +1,7 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include "nfgLoader.h"
+#include "tgaloader.h"
 
 //tweening
 float xpos = 0;
@@ -38,7 +39,17 @@ void Display(void) {
 	//glVertex2f(10.0, -10.0);
 	//glEnd();
 
+	//texture
+	Tga info = Tga("Woman1.tga");
+	glEnable(GL_TEXTURE_2D);
 
+	GLuint texture = 0;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.GetWidth(), info.GetWidth(),
+		0, GL_BGR_EXT, GL_UNSIGNED_BYTE, info.GetPixels().data());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	//vertex
 	float x1 = 0, x2, x3, y1, y2, y3, z1, z2, z3, u1, u2, u3, v1, v2, v3;
