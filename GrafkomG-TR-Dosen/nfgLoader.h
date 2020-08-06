@@ -2,7 +2,7 @@
 #include <iostream>
 #include "struct.h"
 
-int load(const char* nfgPath) {
+int loadnfg(const char* nfgPath) {
 	int line, nx, ny, nz, bnx, bny, bnz, tx, ty, tz, jmlVtx = 0, jmlindx;
 	float tmp;
 	FILE* nfg;

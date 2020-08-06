@@ -1,7 +1,6 @@
 #include <iostream>
 #include <GL/freeglut.h>
 #include "nfgLoader.h"
-#include "tgaLoader.h"
 
 //tweening
 float xpos = 0;
@@ -40,16 +39,7 @@ void Display(void) {
 	//glEnd();
 
 
-	Tga info = Tga("Woman1.tga");
-	glEnable(GL_TEXTURE_2D);
 
-	GLuint texture = 0;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, info.GetWidth(), info.GetWidth(),
-		0, GL_BGR_EXT, GL_UNSIGNED_BYTE, info.GetPixels().data());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	//vertex
 	float x1 = 0, x2, x3, y1, y2, y3, z1, z2, z3, u1, u2, u3, v1, v2, v3;
 	for (int i = 0; i < 718; i++) {
@@ -197,7 +187,7 @@ int main(int argc, char** argv) {
 	glutCreateWindow("Bimo Adam - 672018274 | Yosefhin R.Y - 672018412");
 
 	myinit();
-	load("Woman1.nfg");
+	loadnfg("Woman1.nfg");
 	glutDisplayFunc(Display);
 	glutTimerFunc(0, timer, 0);
 	glutReshapeFunc(reshape);
